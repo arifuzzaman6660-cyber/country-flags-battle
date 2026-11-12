@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport"/><title>ARIFUZZAMAN - Country Flags Battle X</title><style>
+*{box-sizing:border-box}body{margin:0;background:#070d1c;color:#fff;font-family:Arial,sans-serif}.app{max-width:720px;margin:auto;padding:6px}.head{text-align:center;padding:2px 4px 4px}.head h1{margin:0;color:#62bdff;letter-spacing:1px;font-size:16px}.sub{font-size:9px;letter-spacing:1px;color:#b5c8e2}.stats,.controls,.zoom,.settings{display:grid;gap:8px}.stats{grid-template-columns:repeat(3,1fr);margin:8px 0}.panel{background:#111d35;border:1px solid #2c466d;border-radius:11px;padding:10px}.stat{text-align:center;font-size:11px;color:#a9bfdc}.stat b{display:block;font-size:21px;color:white;margin-top:4px}canvas{display:block;width:100%;height:auto;border-radius:13px;background:radial-gradient(#192d4d,#070d1c 72%);touch-action:manipulation}.status{text-align:center;margin:9px 0;color:#68c4ff;font-weight:bold}.controls{grid-template-columns:1fr 1fr}.zoom{grid-template-columns:repeat(3,1fr)}button,select{width:100%;padding:11px 6px;border-radius:8px;border:1px solid #45658e;background:#192f51;color:white;font-weight:bold;font-size:12px}button.primary{background:#087ce6;border-color:#3ca1ff}button.selected{background:#087ce6;border-color:#58b5ff;box-shadow:0 0 10px #168dff}.settings{grid-template-columns:1fr 1fr;margin-top:10px}label{font-size:11px;color:#b5c8e2}label select{margin-top:5px}input[type=range]{width:100%;accent-color:#39a8ff}.log{max-height:120px;overflow:auto;font-size:12px;color:#d7e6f7}.winner{text-align:center;color:#ffd15a;font-weight:bold}.winner strong{display:block;font-size:25px;margin:8px}.hidden{display:none}.brand{text-align:center;font-size:10px;color:#7189aa;margin:10px}.channel-brand{text-align:center;color:#ff3030;font-size:20px;font-weight:900;letter-spacing:2px;margin:10px 0 4px;text-shadow:0 0 9px rgba(255,35,35,.45)}
+.menu-wrap{margin:8px 0}.menu-panel{display:none}.menu-panel.open{display:block}
+
+.round-banner{text-align:center;margin:8px 0 10px;border:2px solid #4aa9ff;background:radial-gradient(circle,#203e68,#0b1730 72%);animation:winnerPop .45s ease-out both}
+#roundTitle{font-size:clamp(22px,6vw,34px);font-weight:900;color:#ffd15a;letter-spacing:2px}
+#roundFlag{font-size:clamp(72px,20vw,130px);line-height:1.25;filter:drop-shadow(0 0 18px #55baff);animation:flagBounce .7s ease-in-out infinite alternate}
+#roundCountry{font-size:18px;font-weight:900;color:#fff}
+.winner{position:relative;overflow:hidden;animation:winnerPop .7s cubic-bezier(.2,.9,.2,1) both}
+.winner strong{font-size:clamp(30px,8vw,54px);text-shadow:0 0 18px #ffd15a}
+#winnerFlag{font-size:clamp(75px,18vw,120px)!important;animation:flagBounce 1s ease-in-out infinite alternate}
+@keyframes winnerPop{0%{transform:scale(.65);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+@keyframes flagBounce{0%{transform:scale(.45) rotate(-18deg);filter:drop-shadow(0 0 0 #ffd15a)}55%{transform:scale(1.28) rotate(10deg);filter:drop-shadow(0 0 24px #ffd15a)}100%{transform:scale(1.12) rotate(0);filter:drop-shadow(0 0 16px #ffd15a)}}
+    @keyframes winnerBallPop{0%{transform:scale(.2) rotate(-160deg);opacity:.2}65%{transform:scale(1.3) rotate(25deg);opacity:1}100%{transform:scale(1.12) rotate(0);opacity:1}}
+    @keyframes winnerGlow{from{box-shadow:0 0 12px #ffd15a, inset 0 0 8px #fff5}to{box-shadow:0 0 34px #ffd15a, inset 0 0 18px #fff9}} 
+    #winnerFlag.winner-ball{display:inline-flex;align-items:center;justify-content:center;width:clamp(100px,25vw,160px);height:clamp(100px,25vw,160px);border-radius:50%;font-size:clamp(55px,14vw,95px)!important;border:5px solid #fff;background:radial-gradient(circle at 30% 25%,#fff 0 5%,var(--winner-color,#ffb52e) 28%,#17233c 100%);animation:winnerBallPop .9s cubic-bezier(.2,.9,.2,1) both,winnerGlow 1s ease-in-out infinite alternate}
+    #winnerFlag.winner-flag{display:block;animation:flagBounce .9s cubic-bezier(.2,.9,.2,1) both}
+    #winnerFlag.winner-flagball{display:inline-flex;align-items:center;justify-content:center;width:clamp(100px,25vw,160px);height:clamp(100px,25vw,160px);border-radius:50%;font-size:clamp(55px,14vw,95px)!important;background:radial-gradient(circle at 30% 25%,#fff 0 4%,#e8f4ff 25%,#526a8c 100%);border:5px solid #fff;animation:winnerBallPop .9s cubic-bezier(.2,.9,.2,1) both,winnerGlow 1s ease-in-out infinite alternate}
+.winner:after{content:"✨ 🏆 ✨ 🎉 ✨";display:block;font-size:24px;letter-spacing:8px;animation:celebrate 1.2s ease-in-out infinite alternate}
+@keyframes celebrate{from{transform:translateY(0);opacity:.55}to{transform:translateY(-8px);opacity:1}}
+.subscribe-toast{position:fixed;z-index:10;left:50%;bottom:18px;transform:translateX(-50%);background:#ff3030;color:white;padding:12px 18px;border-radius:12px;font-weight:900;box-shadow:0 0 22px #ff3030;display:none;text-align:center;width:max-content;max-width:90%}
+
+
+.top-menu{display:flex;justify-content:flex-start;margin:2px 0 8px}
+#menuToggle{width:auto;min-width:150px;padding:12px 18px;background:linear-gradient(135deg,#7c3aed,#2563eb);border:1px solid #a78bfa;box-shadow:0 4px 14px #4338ca66}
+button{background:linear-gradient(135deg,#2457a6,#15345f);border-color:#4b8bd4;box-shadow:0 3px 9px #0005;transition:filter .15s,transform .15s}
+button:active{filter:brightness(1.25);transform:scale(.98)}
+.controls button:nth-child(1){background:linear-gradient(135deg,#16a34a,#047857);border-color:#4ade80}
+.controls button:nth-child(2){background:linear-gradient(135deg,#f59e0b,#c2410c);border-color:#fcd34d}
+.controls button:nth-child(3){background:linear-gradient(135deg,#ef4444,#991b1b);border-color:#fca5a5}
+.controls button:nth-child(4){background:linear-gradient(135deg,#8b5cf6,#5b21b6);border-color:#c4b5fd}
+.zoom button:nth-child(1){background:linear-gradient(135deg,#0891b2,#155e75)}
+.zoom button:nth-child(2){background:linear-gradient(135deg,#0d9488,#115e59)}
+.zoom button:nth-child(3){background:linear-gradient(135deg,#64748b,#334155)}
+.rot-speed:nth-child(1){background:linear-gradient(135deg,#0ea5e9,#1d4ed8)}
+.rot-speed:nth-child(2){background:linear-gradient(135deg,#7c3aed,#5b21b6)}
+.rot-speed:nth-child(3){background:linear-gradient(135deg,#ea580c,#9a3412)}
+button.selected{filter:brightness(1.25);border-color:#fff}
+
+.subscribe-settings{margin-top:10px;border:1px solid #713b48;background:linear-gradient(145deg,#241426,#111d35)}
+.subscribe-title{color:#ff6262;font-size:14px;font-weight:900;letter-spacing:1px;margin-bottom:9px}
+.subscribe-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:9px}
+.subscribe-grid label{display:block}
+.subscribe-grid input,.subscribe-grid select{margin-top:5px}
+.subscribe-message{width:100%;margin-top:5px;padding:10px;border-radius:8px;border:1px solid #45658e;background:#0b1730;color:#fff;font:12px Arial}
+.subscribe-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
+.subscribe-actions button{background:linear-gradient(135deg,#dc2626,#991b1b);border-color:#fb7185}
+.yt-brand{display:flex;align-items:center;justify-content:center;gap:8px;margin:4px 0 10px;color:#fff;font-weight:900;letter-spacing:1px}
+.yt-icon{width:30px;height:21px;border-radius:7px;background:#ff0033;display:inline-flex;align-items:center;justify-content:center;font-size:13px}
+@media(max-width:420px){.subscribe-grid{grid-template-columns:1fr}}
+
+/* Reference-inspired compact mobile interface; gameplay code is unchanged. */
+.app{max-width:680px;padding:7px 12px 22px;background:rgba(5,11,28,.84);min-height:100vh}
+.head{text-align:center;padding:2px 4px 3px}
+.head h1{margin:0;color:#f4f7ff;letter-spacing:1.5px;font-size:clamp(16px,4.5vw,23px);font-weight:900}
+.sub{font-size:10px;letter-spacing:.5px;color:#ffd84d;font-weight:900;margin-top:4px}
+.top-menu{position:absolute;top:76px;left:max(12px,calc((100vw - 680px)/2 + 12px));z-index:5;margin:0}
+#menuToggle{min-width:104px;width:auto;height:40px;padding:7px 14px;border-radius:10px;background:#101b36;border-color:#29446f;font-size:14px;font-weight:900;box-shadow:0 4px 14px #0008}
+.elimination-top{height:clamp(112px,30vw,205px);margin:8px 0 9px;padding:10px 9px;border:1.5px solid #347dff;border-radius:15px;text-align:center;box-shadow:0 0 13px #246bff55;background:#111c38;overflow:hidden}
+.elimination-top>b{font-size:14px;letter-spacing:1px;color:#f4f7ff}
+.elimination-top .log{margin-top:8px;max-height:calc(100% - 30px);overflow:auto;text-align:left;font-size:11px}
+.stats{display:none}
+.status{margin:4px 0 7px;padding:5px;border:0;background:transparent;color:#7f91bd;font-size:12px;text-align:center}
+.round-banner{margin:6px 0;padding:8px}
+canvas{display:block;width:100%;height:auto;max-height:none;margin:0 auto;background:transparent}
+.channel-brand{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:15px;position:relative;width:100%;margin:38px auto 42px;text-align:center}.channel-name{display:block;width:100%;text-align:center;color:#ff3030;font-size:16px;font-weight:900;letter-spacing:1.5px;text-shadow:0 0 9px rgba(255,35,35,.45)}.creator-credit{display:inline-block;align-self:center;padding:7px 20px;border:1px solid #536dff;border-radius:22px;background:#0c1731;color:#ffd84d;font-size:10px;letter-spacing:.5px;white-space:nowrap;box-shadow:0 0 10px #355fff55;margin:0;text-align:center}
+.menu-wrap:not(.top-menu){margin-top:8px}
+.menu-panel{display:none;position:fixed;top:124px;left:10px;width:min(330px,calc(100vw - 20px));max-height:calc(100dvh - 145px);overflow-y:auto;overscroll-behavior:contain;z-index:1000;background:rgba(7,13,28,.98);box-shadow:0 12px 35px #000b;border:1px solid #29446f;padding:10px}
+.menu-panel.open{display:block}
+.controls{grid-template-columns:1fr 1fr}
+@media(min-width:600px){.app{padding-left:18px;padding-right:18px}.elimination-top{height:170px}}
+
+</style><style>
+.license-overlay{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(3,8,22,.96);font-family:Arial,sans-serif}
+.license-card{width:min(440px,100%);padding:22px;border:1px solid #397bd1;border-radius:18px;background:linear-gradient(145deg,#14264a,#071225);box-shadow:0 0 35px #1263d455;text-align:center;color:#fff}
+.license-card h2{margin:0 0 8px;color:#69bdff;font-size:23px}
+.license-card p{color:#b8cce8;font-size:13px;line-height:1.5}
+.license-card input{width:100%;padding:13px;border:1px solid #476b9c;border-radius:9px;background:#071225;color:#fff;font-size:13px;margin:10px 0}
+.license-card button{width:100%;padding:13px;border:1px solid #60a5fa;border-radius:9px;background:linear-gradient(135deg,#087ce6,#1742a0);color:#fff;font-weight:900}
+.license-error{min-height:18px;color:#ff8b8b;font-size:12px;margin-top:10px}
+.license-small{font-size:10px!important;color:#8298ba!important}
+
+.owner-license-wrap{max-width:680px;margin:12px auto;padding:12px;background:#111d35;border:1px solid #3d69a5;border-radius:14px;color:#fff;font-family:Arial,sans-serif}
+.owner-license-wrap h2{margin:0 0 7px;color:#75c6ff;font-size:18px}.owner-license-wrap p{font-size:11px;color:#b8cce8;line-height:1.45}.owner-license-wrap label{display:block;margin-top:9px;font-size:11px;color:#c9d9ef}.owner-license-wrap input,.owner-license-wrap select{width:100%;margin-top:5px;padding:10px;border:1px solid #45658e;border-radius:8px;background:#071225;color:#fff}.owner-license-wrap button{margin-top:9px;padding:10px;border:1px solid #60a5fa;border-radius:8px;background:linear-gradient(135deg,#087ce6,#1742a0);color:#fff;font-weight:900}.owner-license-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.owner-license-wrap textarea{width:100%;min-height:78px;margin-top:8px;padding:9px;background:#050d1b;color:#9ee7b0;border:1px solid #45658e;border-radius:8px;word-break:break-all}.owner-license-list{max-height:230px;overflow:auto;margin-top:10px}.owner-license-item{padding:9px;margin-top:7px;background:#0a1730;border:1px solid #29446f;border-radius:8px;font-size:11px;word-break:break-word}.owner-license-item button{margin-right:5px;padding:6px 8px;font-size:10px}.owner-license-status{font-size:11px;color:#9ee7b0;min-height:16px;margin-top:7px}
+</style></head><body>
+<main class="app"><header class="head"><h1>COUNTRY FLAGS BATTLE X</h1><div class="sub">POWER EVENTS • ELIMINATION • CHAMPION ARENA</div></header><div class="menu-wrap top-menu"><button class="primary" id="menuToggle" aria-expanded="false">☰ MENU</button></div><section class="panel elimination-top"><b>ELIMINATION BOARD</b><div class="log" id="log">No flags eliminated yet.</div></section>
+<section class="stats"><div class="panel stat">REMAINING<b id="remaining">200</b></div><div class="panel stat">ELIMINATED<b id="eliminated">0</b></div></section>
+<section class="panel round-banner hidden" id="roundBanner"><div id="roundTitle">ROUND 1</div><div aria-label="Round flag" id="roundFlag"></div><div id="roundCountry"></div></section>
+<section class="panel winner hidden" id="winner">🏆 BATTLE WINNER<strong id="winnerName"></strong><div id="winnerFlag" style="font-size:55px"></div></section><canvas height="700" id="arena" width="700"></canvas><div class="channel-brand"><div class="channel-name">NOVAVIBE TECHLAB</div><div class="creator-credit">CREATED BY ARIFUZZAMAN</div></div><div class="menu-wrap"><div class="panel menu-panel" id="menuPanel"><div class="panel status" id="status">READY TO BATTLE</div><div class="controls"><button class="primary" id="start">▶ START BATTLE</button><button id="pause">Ⅱ PAUSE</button><button id="restart">↻ RESTART</button><button id="full">⛶ FULLSCREEN</button></div>
+<section class="panel" style="margin-top:9px"><b style="display:block;color:#6bc1ff;font-size:13px;margin-bottom:8px">GAME OBJECT</b><div class="zoom mode-buttons" style="grid-template-columns:repeat(3,1fr);margin-bottom:12px"><button class="selected" id="flagsMode">🏳️ FLAGS</button><button id="ballsMode">⚽ BALLS</button><button id="flagBallMode">🌐 FLAG BALL</button></div><b style="color:#6bc1ff;font-size:13px">ARENA ZOOM</b><div class="zoom" style="margin-top:8px"><button id="zin">＋ ZOOM IN</button><button id="zout">－ ZOOM OUT</button><button id="zreset">RESET ZOOM</button></div><b style="display:block;color:#6bc1ff;font-size:12px;margin-top:12px">CIRCLE ROTATION SPEED</b><div class="zoom" style="margin-top:7px"><button class="rot-speed selected" data-speed="0.20">SLOW ✓</button><button class="rot-speed" data-speed="0.42">MEDIUM</button><button class="rot-speed" data-speed="0.72">FAST</button></div><div class="settings"><label>FLAG COUNT<select id="count"><option>50</option><option>100</option><option>150</option><option selected="">200</option></select></label><label>FLAG SPEED<select id="speed"><option value="1">1x</option><option selected="" value="2">2x</option><option value="3">3x</option><option value="4">4x</option><option value="5">5x</option><option value="6">6x</option><option value="7">7x</option><option value="8">8x</option><option value="9">9x</option><option value="10">10x</option></select></label><label>FLAG SIZE <input id="flagSize" max="42" min="12" type="range" value="25"/><span id="flagSizeValue">25px</span></label><label>FLAG SPREAD<select id="spread"><option value=".65">LOW</option><option selected="" value="1">MEDIUM</option><option value="1.35">HIGH</option></select></label><label>TOTAL AUTOPLAY<select id="total"><option value="1">1 MINUTE</option><option value="5">5 MINUTES</option><option value="10">10 MINUTES</option><option value="30">30 MINUTES</option><option value="60">1 HOUR</option><option value="120">2 HOURS</option><option value="300">5 HOURS</option><option value="600">10 HOURS</option></select></label></div><div class="settings" style="margin-top:10px"><label><input checked="" id="sound" type="checkbox"/> COLLISION SOUND</label><label><input checked="" id="voice" type="checkbox"/> WINNER VOICE</label></div><label style="display:block;margin-top:10px">SOUND VOLUME<input id="volume" max="100" min="0" type="range" value="55"/></label></section>
+<section class="panel" style="margin-top:10px;border-color:#8b5cf6;background:linear-gradient(145deg,#171638,#101d35)">
+ <div style="color:#c4b5fd;font-size:13px;font-weight:900;margin-bottom:9px">⚡ BATTLE X — SPECIAL FEATURES</div>
+ <div class="settings">
+ <label>BATTLE STYLE<select id="battleStyle"><option value="classic">CLASSIC BATTLE</option><option value="power" selected>POWER EVENT BATTLE</option><option value="sudden">SUDDEN DEATH</option></select></label>
+ <label>ARENA THEME<select id="arenaTheme"><option value="neon" selected>NEON BLUE</option><option value="fire">FIRE STORM</option><option value="ice">ICE CRYSTAL</option><option value="jungle">JUNGLE</option></select></label>
+ </div>
+ <div id="eventDisplay" style="margin-top:9px;padding:10px;border-radius:9px;text-align:center;background:#090f20;border:1px solid #43517d;color:#ffd86b;font-weight:900;font-size:12px">⚡ POWER EVENTS READY</div>
+ <div class="stat" style="margin-top:7px">Power Event Battle triggers random speed, freeze and swirl effects. Sudden Death increases the arena challenge as the battle continues.</div>
+ </section>
+ <section class="panel" id="circleDesignPanel" style="margin-top:10px;border-color:#22d3ee;background:linear-gradient(145deg,#10263d,#101d35)">
+ <div style="color:#67e8f9;font-size:13px;font-weight:900;margin-bottom:10px">⭕ CIRCLE CUSTOM DESIGN</div>
+ <div class="settings">
+  <label>CIRCLE COLOR<input id="circleColor" type="color" value="#12345f" style="display:block;width:100%;height:38px;margin-top:5px;padding:3px;background:#091426;border:1px solid #45658e;border-radius:8px"/></label>
+  <label>CIRCLE STYLE<select id="circleStyle"><option value="solid">SOLID</option><option value="double">DOUBLE RING</option><option value="dashed">DASHED</option><option value="dotted">DOTTED</option><option value="neon">NEON GLOW</option></select></label>
+  <label>LINE THICKNESS<input id="circleThickness" type="range" min="4" max="30" value="16"/><span id="circleThicknessValue">16px</span></label>
+  <label>GLOW INTENSITY<input id="circleGlow" type="range" min="0" max="30" value="10"/><span id="circleGlowValue">10</span></label>
+  <label>CIRCLE FACE SIZE<input id="circleFaceSize" type="range" min="50" max="180" value="100"/><span id="circleFaceSizeValue">100%</span></label>
+  <label>FLAG EXIT OPENING<input id="exitOpening" type="range" min="0" max="100" value="33"/><span id="exitOpeningValue">33%</span></label>
+ </div>
+ <div class="zoom" style="margin-top:10px"><button class="primary" id="saveCircleDesign" type="button">💾 SAVE DESIGN</button><button id="resetCircleDesign" type="button">↺ RESET DESIGN</button></div>
+ <div class="stat" style="margin-top:8px">Change the ring color, style, thickness and glow. Your design is saved on this device.</div>
+ </section>
+ <section class="panel appearance-settings" style="margin-top:10px">
+<div style="color:#6bc1ff;font-size:13px;font-weight:900;margin-bottom:10px">🎨 CHANNEL &amp; THEME CUSTOMIZATION</div>
+<label style="display:block">CUSTOM CHANNEL NAME
+<input class="subscribe-message" id="customChannelName" maxlength="40" placeholder="ENTER YOUR CHANNEL NAME" type="text" value="NOVAVIBE TECHLAB"/>
+</label>
+<div class="settings" style="margin-top:8px">
+<button class="primary" id="saveChannelName" type="button">SAVE CHANNEL NAME</button>
+<button id="resetChannelName" type="button">RESET CHANNEL NAME</button>
+</div>
+<div style="height:1px;background:#29446f;margin:13px 0"></div>
+<label style="display:block">SET YOUR OWN PHOTO AS GAME THEME
+<input accept="image/*" id="themePhotoInput" style="display:block;width:100%;margin-top:8px;color:#b5c8e2;font-size:11px" type="file"/>
+</label>
+<label style="display:block;margin-top:10px"><input checked="" id="themeVisible" type="checkbox"/> SHOW PHOTO THEME INSIDE CIRCLE</label>
+<label style="display:block;margin-top:8px">PHOTO THEME OPACITY <input id="themeOpacity" max="100" min="10" type="range" value="90"/><span id="themeOpacityValue">90%</span></label>
+<button id="resetThemePhoto" style="margin-top:9px" type="button">REMOVE PHOTO THEME</button>
+<div class="stat" style="margin-top:8px">Photo theme stays inside the battle circle and scales with circle size. You can show or hide it.</div>
+</section>
+<section class="panel subscribe-settings">
+<div class="subscribe-title">🔔 SUBSCRIBE ANNOUNCEMENT SETTINGS</div>
+<div class="yt-brand"><span class="yt-icon">▶</span><span>NOVAVIBE TECHLAB</span></div>
+<button class="primary" id="subscribeNow">🔔 SUBSCRIBE TODAY</button>
+<div class="subscribe-grid">
+<label>ANNOUNCEMENT INTERVAL (SECONDS)
+<input class="subscribe-message" id="subscribeInterval" max="3600" min="5" type="number" value="30"/>
+</label>
+<label>VOICE TYPE
+<select id="subscribeGender"><option value="male">👨 Male Voice</option><option value="female">👩 Female Voice</option></select>
+</label>
+</div>
+<label style="display:block;margin-top:10px">CUSTOM SUBSCRIBE MESSAGE
+<input class="subscribe-message" id="subscribeMessage" maxlength="180" type="text" value="Please subscribe to the NOVAVIBE TECHLAB channel!"/>
+</label>
+<div class="subscribe-grid">
+<label><input checked="" id="subscribeVoiceOn" type="checkbox"/> 🔊 VOICE ON/OFF</label>
+<label><input checked="" id="subscribeToastOn" type="checkbox"/> SHOW POPUP</label>
+</div>
+<div class="subscribe-actions">
+<button id="voicePreview">🎙️ VOICE PREVIEW</button>
+<button id="subscribeReset">↻ RESET DEFAULTS</button>
+</div>
+<div class="stat" style="margin-top:8px">Default announcement interval: 30 seconds</div>
+</section>
+<div class="brand">NOVAVIBE TECHLAB • COUNTRY FLAGS BATTLE X</div><div class="subscribe-toast" id="subscribeToast">🔔 SUBSCRIBE TO THE NOVAVIBE TECHLAB CHANNEL!</div></div></div></main>
+<script>
+const countryData=`Afghanistan AF|Albania AL|Algeria DZ|Andorra AD|Angola AO|Antigua and Barbuda AG|Argentina AR|Armenia AM|Australia AU|Austria AT|Azerbaijan AZ|Bahamas BS|Bahrain BH|Bangladesh BD|Barbados BB|Belarus BY|Belgium BE|Belize BZ|Benin BJ|Bhutan BT|Bolivia BO|Bosnia and Herzegovina BA|Botswana BW|Brazil BR|Brunei BN|Bulgaria BG|Burkina Faso BF|Burundi BI|Cabo Verde CV|Cambodia KH|Cameroon CM|Canada CA|Central African Republic CF|Chad TD|Chile CL|China CN|Colombia CO|Comoros KM|Congo CG|Costa Rica CR|Croatia HR|Cuba CU|Cyprus CY|Czechia CZ|Denmark DK|Djibouti DJ|Dominica DM|Dominican Republic DO|DR Congo CD|Ecuador EC|Egypt EG|El Salvador SV|Equatorial Guinea GQ|Eritrea ER|Estonia EE|Eswatini SZ|Ethiopia ET|Fiji FJ|Finland FI|France FR|Gabon GA|Gambia GM|Georgia GE|Germany DE|Ghana GH|Greece GR|Grenada GD|Guatemala GT|Guinea GN|Guinea-Bissau GW|Guyana GY|Haiti HT|Honduras HN|Hungary HU|Iceland IS|India IN|Indonesia ID|Iran IR|Iraq IQ|Ireland IE|Israel IL|Italy IT|Jamaica JM|Japan JP|Jordan JO|Kazakhstan KZ|Kenya KE|Kiribati KI|Kuwait KW|Kyrgyzstan KG|Laos LA|Latvia LV|Lebanon LB|Lesotho LS|Liberia LR|Libya LY|Liechtenstein LI|Lithuania LT|Luxembourg LU|Madagascar MG|Malawi MW|Malaysia MY|Maldives MV|Mali ML|Malta MT|Marshall Islands MH|Mauritania MR|Mauritius MU|Mexico MX|Micronesia FM|Moldova MD|Monaco MC|Mongolia MN|Montenegro ME|Morocco MA|Mozambique MZ|Myanmar MM|Namibia NA|Nauru NR|Nepal NP|Netherlands NL|New Zealand NZ|Nicaragua NI|Niger NE|Nigeria NG|North Korea KP|North Macedonia MK|Norway NO|Oman OM|Pakistan PK|Palau PW|Palestine PS|Panama PA|Papua New Guinea PG|Paraguay PY|Peru PE|Philippines PH|Poland PL|Portugal PT|Qatar QA|Romania RO|Russia RU|Rwanda RW|Saint Kitts and Nevis KN|Saint Lucia LC|Saint Vincent and the Grenadines VC|Samoa WS|San Marino SM|Sao Tome and Principe ST|Saudi Arabia SA|Senegal SN|Serbia RS|Seychelles SC|Sierra Leone SL|Singapore SG|Slovakia SK|Slovenia SI|Solomon Islands SB|Somalia SO|South Africa ZA|South Korea KR|South Sudan SS|Spain ES|Sri Lanka LK|Sudan SD|Suriname SR|Sweden SE|Switzerland CH|Syria SY|Tajikistan TJ|Tanzania TZ|Thailand TH|Timor-Leste TL|Togo TG|Tonga TO|Trinidad and Tobago TT|Tunisia TN|Turkey TR|Turkmenistan TM|Tuvalu TV|Uganda UG|Ukraine UA|United Arab Emirates AE|United Kingdom GB|United States US|Uruguay UY|Uzbekistan UZ|Vanuatu VU|Vatican City VA|Venezuela VE|Vietnam VN|Yemen YE|Zambia ZM|Zimbabwe ZW|Kosovo XK|Taiwan TW|Cook Islands CK|Niue NU|Hong Kong HK|Macau MO|Faroe Islands FO|Greenland GL|Bermuda BM|Cayman Islands KY|Aruba AW|Curacao CW|Gibraltar GI|Isle of Man IM|Jersey JE|Guernsey GG|Puerto Rico PR|Guam GU|American Samoa AS|French Polynesia PF|New Caledonia NC|Western Sahara EH`;
+const countries=countryData.split('|').map(s=>{let a=s.trim().split(' '),code=a.pop();return{name:a.join(' '),code}});const flag=code=>String.fromCodePoint(...code.split('').map(ch=>127397+ch.charCodeAt(0)));const $=id=>document.getElementById(id),canvas=$('arena'),ctx=canvas.getContext('2d'),C=350;let balls=[],dead=[],objectMode='flags',circleFaceScale=1,angle=0,zoom=1,circleSpeed=.20,playing=false,paused=false,totalTime=60,last=0,roundNo=0,timer=null,audio,flagSize=25,subscribeClock=0,battleStyle='power',arenaTheme='neon',eventClock=0,eventRemaining=0,eventKind='';
+function beep(f=180,d=.06){if(!$('sound').checked)return;try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();let o=audio.createOscillator(),g=audio.createGain();o.frequency.value=f;g.gain.value=+$('volume').value/100*.11;o.connect(g);g.connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.stop(audio.currentTime+d)}catch(e){}}
+function say(t){if($('voice').checked&&speechSynthesis){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.lang='en-US';speechSynthesis.speak(u)}}
+function speakWithSelectedVoice(message){if(!window.speechSynthesis)return;const synth=window.speechSynthesis;synth.cancel();const u=new SpeechSynthesisUtterance(message);const gender=$('subscribeGender').value;const voices=synth.getVoices();const english=voices.filter(v=>/^en([_-]|$)/i.test(v.lang));const maleNames=/male|man|david|mark|daniel|guy|alex|fred|tom|aaron|jorge|lee|james|oliver|arthur|thomas/i;const femaleNames=/female|woman|samantha|victoria|zira|karen|susan|aria|jenny|moira|tessa|ava|siri/i;let match=gender==='male'?english.find(v=>maleNames.test(v.name)):english.find(v=>femaleNames.test(v.name));if(!match)match=english.find(v=>/google|microsoft|natural|online/i.test(v.name))||english[0];if(match)u.voice=match;u.lang=match?.lang||'en-US';u.rate=gender==='male'?.88:.96;u.pitch=gender==='male'?.72:1.12;u.volume=1;synth.speak(u)}
+function saySubscribe(){const message=$('subscribeMessage').value.trim()||'Please subscribe to the NOVAVIBE TECHLAB channel!';if($('subscribeToastOn').checked){$('subscribeToast').textContent='🔔 '+message;$('subscribeToast').style.display='block';clearTimeout(window.subscribeToastTimer);window.subscribeToastTimer=setTimeout(()=>$('subscribeToast').style.display='none',4200)}if($('subscribeVoiceOn').checked&&window.speechSynthesis){const synth=window.speechSynthesis;if(synth.getVoices().length){speakWithSelectedVoice(message)}else{const once=()=>{synth.removeEventListener('voiceschanged',once);speakWithSelectedVoice(message)};synth.addEventListener('voiceschanged',once);setTimeout(()=>{if(!synth.speaking)speakWithSelectedVoice(message)},700)}}}
+function stats(){$('remaining').textContent=balls.filter(b=>b.alive).length;$('eliminated').textContent=dead.length;}
+function setup(){clearTimeout(timer);balls=[];dead=[];angle=0;subscribeClock=0;eventClock=0;eventRemaining=0;eventKind='';$('eventDisplay').textContent='⚡ POWER EVENTS READY';let n=+$('count').value,spread=+$('spread').value;for(let i=0;i<n;i++){let a=Math.random()*Math.PI*2,r=Math.sqrt(Math.random())*135*spread,k=countries[i%countries.length];balls.push({name:k.name,flag:flag(k.code),x:C+Math.cos(a)*r,y:C+Math.sin(a)*r,vx:(Math.random()-.5)*1.8,vy:(Math.random()-.5)*1.8,alive:true,fall:0,spin:0,color:['#ff5252','#29b6f6','#66bb6a','#ffca28','#ab47bc','#ffffff'][i%6]})}$('winner').classList.add('hidden');$('roundBanner').classList.add('hidden');$('winnerFlag').className='';$('winnerFlag').style.removeProperty('--winner-color');$('status').textContent='READY TO BATTLE';$('log').textContent='No flags eliminated yet.';stats()}
+function eliminate(b){if(!b.alive)return;b.alive=false;b.fall=0;dead.unshift(b);$('log').innerHTML='<div style="padding:3px;border-bottom:1px solid #2a3d5c">'+b.flag+' '+b.name+' — ELIMINATED</div>'+$('log').innerHTML;$('status').textContent=b.name+' ELIMINATED';beep(105,.15);stats()}
+let roundBannerTimer=null;
+function announceRound(n){
+ clearTimeout(roundBannerTimer);
+ const live=balls.filter(b=>b.alive);
+ const sample=live.length?live[Math.floor(Math.random()*live.length)]:null;
+ $('roundTitle').textContent='ROUND '+n;
+ $('roundFlag').textContent=sample?sample.flag:'🏁';
+ $('roundCountry').textContent=sample?sample.name.toUpperCase():'GET READY!';
+ $('roundBanner').classList.remove('hidden');
+ $('status').textContent='ROUND '+n+' IN PROGRESS';
+ if($('voice').checked&&window.speechSynthesis){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance('Round '+n);u.lang='en-US';speechSynthesis.speak(u);}
+ roundBannerTimer=setTimeout(()=>{$('roundBanner').classList.add('hidden')},2200);
+}
+function finish(){if(!playing)return;playing=false;let alive=balls.filter(b=>b.alive),w=alive[0];if(w){$('winner').classList.remove('hidden');$('winnerName').textContent=w.name;const winnerVisual=$('winnerFlag');winnerVisual.className='';winnerVisual.textContent=w.flag;if(objectMode==='balls'){winnerVisual.classList.add('winner-ball');winnerVisual.textContent='';winnerVisual.style.setProperty('--winner-color',w.color||'#ffb52e');}else if(objectMode==='flagball'){winnerVisual.classList.add('winner-flagball');}else{winnerVisual.classList.add('winner-flag');} $('status').textContent=w.name.toUpperCase()+' WINS!';say('The winner is '+w.name+'!');beep(700,.35)}else $('status').textContent='ROUND FINISHED';roundNo++;if(totalTime>0)timer=setTimeout(()=>{if(totalTime>0){setup();playing=true;announceRound(roundNo)}},1800)}
+function draw(){ctx.clearRect(0,0,700,700);let R=285*zoom;
+ // Draw the custom photo only inside the live circle; its dimensions follow ARENA ZOOM.
+ if(themeVisible&&themeImage&&themeImage.complete&&themeImage.naturalWidth){const rr=Math.max(1,R-9),diam=rr*2,scale=Math.max(diam/themeImage.naturalWidth,diam/themeImage.naturalHeight),w=themeImage.naturalWidth*scale,h=themeImage.naturalHeight*scale;ctx.save();ctx.beginPath();ctx.arc(C,C,rr,0,Math.PI*2);ctx.clip();ctx.globalAlpha=themeOpacity;ctx.drawImage(themeImage,C-w/2,C-h/2,w,h);ctx.restore();}
+ ctx.save();ctx.translate(C,C);ctx.rotate(angle);ctx.beginPath();ctx.arc(0,0,R,0,Math.PI*2);ctx.strokeStyle=circleDesign.color;ctx.lineWidth=circleDesign.thickness;ctx.shadowColor=circleDesign.color;ctx.shadowBlur=circleDesign.glow;if(circleDesign.style==='dashed')ctx.setLineDash([18,11]);else if(circleDesign.style==='dotted')ctx.setLineDash([2,12]);else ctx.setLineDash([]);ctx.stroke();if(circleDesign.style==='double'){ctx.beginPath();ctx.arc(0,0,R- circleDesign.thickness-5,0,Math.PI*2);ctx.stroke();}if(circleDesign.style==='neon'){ctx.shadowBlur=circleDesign.glow*2;ctx.lineWidth=Math.max(2,circleDesign.thickness/2);ctx.stroke();}ctx.setLineDash([]);ctx.shadowBlur=0;const exitHalfAngle=(circleDesign.exitOpening??33)/100*.9;if(exitHalfAngle>0){ctx.beginPath();ctx.arc(0,0,R,-exitHalfAngle,exitHalfAngle);ctx.strokeStyle='#070d1c';ctx.lineWidth=Math.max(22,circleDesign.thickness+8);ctx.stroke();}ctx.restore();
+ // Small colored bumpers distributed around the circular wall.
+ const bumperColors=arenaTheme==='fire'?['#ff3d00','#ff9100','#ffd166','#dc2626']:arenaTheme==='ice'?['#a5f3fc','#38bdf8','#e0f2fe','#818cf8']:arenaTheme==='jungle'?['#4ade80','#16a34a','#a3e635','#facc15']:['#ff4d6d','#ffd166','#06d6a0','#4cc9f0','#c77dff','#ff9f1c'];
+ for(let i=0;i<36;i++){const a=(i/36)*Math.PI*2+angle;const bx=C+Math.cos(a)*R,by=C+Math.sin(a)*R;ctx.beginPath();ctx.arc(bx,by,5,0,Math.PI*2);ctx.fillStyle=bumperColors[i%bumperColors.length];ctx.shadowColor=bumperColors[i%bumperColors.length];ctx.shadowBlur=3;ctx.fill();ctx.shadowBlur=0;ctx.lineWidth=1;ctx.strokeStyle='#18365a';ctx.stroke();}
+ ctx.beginPath();ctx.arc(C,C,5,0,7);ctx.fillStyle='#6bc4ff';ctx.fill();for(let b of balls){ctx.save();ctx.translate(b.x,b.y);if(!b.alive)ctx.globalAlpha=Math.max(0,1-b.fall);if(objectMode==='balls'){const r=flagSize*.52*circleFaceScale;ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.fillStyle=b.color||'#ffb52e';ctx.fill();ctx.lineWidth=2;ctx.strokeStyle='#ffffff';ctx.stroke();ctx.beginPath();ctx.arc(-r*.28,-r*.25,r*.25,0,Math.PI*2);ctx.fillStyle='#ffffff';ctx.globalAlpha*=.55;ctx.fill()}else if(objectMode==='flagball'){const r=flagSize*.58*circleFaceScale;ctx.save();ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.clip();ctx.fillStyle='#ffffff';ctx.fillRect(-r,-r,2*r,2*r);ctx.font=(r*1.75)+'px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(b.flag,0,0);ctx.restore();ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.lineWidth=2;ctx.strokeStyle='#ffffff';ctx.stroke();ctx.beginPath();ctx.arc(-r*.3,-r*.3,r*.2,0,Math.PI*2);ctx.fillStyle='#ffffff';ctx.globalAlpha*=.22;ctx.fill()}else{ctx.font=flagSize+'px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(b.flag,0,0)}ctx.restore()}}
+function frame(t){requestAnimationFrame(frame);let dt=Math.min(.03,(t-last)/1000||.016);last=t;if(playing&&!paused){let sp=+$('speed').value;angle+=dt*circleSpeed*sp;totalTime-=dt;subscribeClock+=dt;eventClock+=dt;
+ if(battleStyle==='power'&&eventClock>=12){eventClock=0;eventRemaining=3;const events=['BOOST','FREEZE','SWIRL'];eventKind=events[Math.floor(Math.random()*events.length)];$('eventDisplay').textContent=eventKind==='BOOST'?'🚀 SPEED BOOST — 3 SECONDS':eventKind==='FREEZE'?'❄️ FREEZE BLAST — 3 SECONDS':'🌀 SWIRL FORCE — 3 SECONDS';$('status').textContent='SPECIAL EVENT: '+eventKind;beep(520,.12);}
+ if(eventRemaining>0){eventRemaining=Math.max(0,eventRemaining-dt);if(eventRemaining===0){$('eventDisplay').textContent='⚡ NEXT POWER EVENT LOADING';}}
+ if(battleStyle==='sudden'&&eventClock>=30){eventClock=0;circleSpeed=Math.min(1.1,circleSpeed+.12);$('eventDisplay').textContent='☠️ SUDDEN DEATH — ARENA SPEED UP!';$('status').textContent='SUDDEN DEATH ACTIVE';beep(760,.18);}
+ let R=285*zoom;for(let b of balls.filter(x=>x.alive)){if(eventRemaining>0){if(eventKind==='BOOST'){b.vx*=1.002;b.vy*=1.002;}else if(eventKind==='FREEZE'){b.vx*=.985;b.vy*=.985;}else if(eventKind==='SWIRL'){const sx=b.x-C,sy=b.y-C;b.vx+=-sy*.00008;b.vy+=sx*.00008;}}
+ b.x+=b.vx*dt*60*sp;b.y+=b.vy*dt*60*sp;b.spin=0;let dx=b.x-C,dy=b.y-C,d=Math.hypot(dx,dy)||1,a=Math.atan2(dy,dx),rel=Math.atan2(Math.sin(a-angle),Math.cos(a-angle));const exitHalfAngle=(circleDesign.exitOpening??33)/100*.9;if(d>R-20&&(exitHalfAngle===0||Math.abs(rel)>exitHalfAngle)){
+ // Contact with the colored ring bumpers sends the flag sharply back toward the center.
+ const nx=dx/d,ny=dy/d;b.x=C+nx*(R-23);b.y=C+ny*(R-23);
+ const outward=b.vx*nx+b.vy*ny;
+ if(outward>0){b.vx-=2.15*outward*nx;b.vy-=2.15*outward*ny;}
+ const kick=1.15;b.vx-=nx*kick;b.vy-=ny*kick;
+ beep(230+Math.random()*180,.035);
+ }else if(exitHalfAngle>0&&d>R-15&&Math.abs(rel)<exitHalfAngle){
+ // The rotating opening lets a flag fly out of the arena.
+ b.vx+=Math.cos(a)*1.15;b.vy+=Math.sin(a)*1.15;
+ if(d>R+20)eliminate(b);
+}}let live=balls.filter(b=>b.alive);for(let i=0;i<live.length;i++)for(let j=i+1;j<live.length;j++){let a=live[i],b=live[j],dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||.01,min=Math.max(18,flagSize*1.12*(objectMode==='balls'||objectMode==='flagball'?circleFaceScale:1));if(d<min){let nx=dx/d,ny=dy/d,over=min-d;a.x-=nx*over/2;a.y-=ny*over/2;b.x+=nx*over/2;b.y+=ny*over/2;let v=(b.vx-a.vx)*nx+(b.vy-a.vy)*ny;if(v<0){let imp=-v*.9;a.vx-=imp*nx;b.vx+=imp*nx;a.vy-=imp*ny;b.vy+=imp*ny;beep(170+Math.random()*130,.025)}}}for(let b of dead){b.x+=Math.cos(angle)*dt*70;b.y+=dt*95;b.fall=Math.min(1,b.fall+dt*.65)}if(live.length<=1)finish();const announceEvery=Math.max(5,Math.min(3600,Number($('subscribeInterval').value)||30));if(subscribeClock>=announceEvery){subscribeClock=0;saySubscribe();}
+if(totalTime<=0){playing=false;clearTimeout(timer);$('status').textContent='AUTOPLAY COMPLETED'}stats()}draw()}
+const menuPanel=$('menuPanel');const topMenu=document.querySelector('.top-menu');topMenu.appendChild(menuPanel);$('menuToggle').onclick=()=>{const opened=menuPanel.classList.toggle('open');$('menuToggle').setAttribute('aria-expanded',String(opened));$('menuToggle').textContent=opened?'✕ CLOSE':'☰ MENU'};
+$('flagSize').oninput=e=>{flagSize=+e.target.value;$('flagSizeValue').textContent=flagSize+'px'};
+$('circleFaceSize').oninput=e=>{circleFaceScale=+e.target.value/100;circleDesign.faceSize=+e.target.value;$('circleFaceSizeValue').textContent=e.target.value+'%'};
+$('battleStyle').onchange=e=>{battleStyle=e.target.value;eventClock=0;eventRemaining=0;$('eventDisplay').textContent=battleStyle==='power'?'⚡ POWER EVENTS READY':battleStyle==='sudden'?'☠️ SUDDEN DEATH READY':'CLASSIC BATTLE';};
+$('arenaTheme').onchange=e=>{arenaTheme=e.target.value;};
+// Independent circle-design controls with local save/reset.
+const CIRCLE_DESIGN_KEY='cfb_circle_design_v1';
+const circleDefaults={color:'#12345f',style:'solid',thickness:16,glow:10,faceSize:100,exitOpening:33};
+let circleDesign={...circleDefaults};
+circleFaceScale=(circleDesign.faceSize||100)/100;
+function applyCircleDesignUI(){ $('circleColor').value=circleDesign.color;$('circleStyle').value=circleDesign.style;$('circleThickness').value=circleDesign.thickness;$('circleGlow').value=circleDesign.glow;$('circleFaceSize').value=circleDesign.faceSize||100;$('circleFaceSizeValue').textContent=(circleDesign.faceSize||100)+'%';$('exitOpening').value=circleDesign.exitOpening??33;$('exitOpeningValue').textContent=(circleDesign.exitOpening??33)+'%';circleFaceScale=(circleDesign.faceSize||100)/100;$('circleThicknessValue').textContent=circleDesign.thickness+'px';$('circleGlowValue').textContent=String(circleDesign.glow); }
+try{const saved=JSON.parse(localStorage.getItem(CIRCLE_DESIGN_KEY)||'null');if(saved&&/^#[0-9a-f]{6}$/i.test(saved.color)&&['solid','double','dashed','dotted','neon'].includes(saved.style)){circleDesign={color:saved.color,style:saved.style,thickness:Math.max(4,Math.min(30,Number(saved.thickness)||16)),glow:Math.max(0,Math.min(30,Number(saved.glow)||0)),faceSize:Math.max(50,Math.min(180,Number(saved.faceSize)||100)),exitOpening:Math.max(0,Math.min(100,Number(saved.exitOpening??33)))};}}catch(e){}
+applyCircleDesignUI();
+$('circleColor').oninput=e=>circleDesign.color=e.target.value;
+$('circleStyle').onchange=e=>circleDesign.style=e.target.value;
+$('circleThickness').oninput=e=>{circleDesign.thickness=+e.target.value;$('circleThicknessValue').textContent=e.target.value+'px'};
+$('circleGlow').oninput=e=>{circleDesign.glow=+e.target.value;$('circleGlowValue').textContent=e.target.value};
+$('exitOpening').oninput=e=>{circleDesign.exitOpening=+e.target.value;$('exitOpeningValue').textContent=e.target.value+'%'};
+$('saveCircleDesign').onclick=()=>{try{localStorage.setItem(CIRCLE_DESIGN_KEY,JSON.stringify(circleDesign));$('saveCircleDesign').textContent='✓ DESIGN SAVED';setTimeout(()=>$('saveCircleDesign').textContent='💾 SAVE DESIGN',1500)}catch(e){alert('Could not save design in this browser.')}};
+$('resetCircleDesign').onclick=()=>{circleDesign={...circleDefaults};applyCircleDesignUI();try{localStorage.removeItem(CIRCLE_DESIGN_KEY)}catch(e){}};
+
+function setObjectMode(mode){objectMode=mode;const modes=[['flagsMode','flags','🏳️ FLAGS'],['ballsMode','balls','⚽ BALLS'],['flagBallMode','flagball','🌐 FLAG BALL']];for(const [id,key,label] of modes){$(id).classList.toggle('selected',mode===key);$(id).textContent=mode===key?label+' ✓':label;}playing=false;paused=false;setup();$('pause').textContent='Ⅱ PAUSE';}
+$('flagsMode').onclick=()=>setObjectMode('flags');$('ballsMode').onclick=()=>setObjectMode('balls');$('flagBallMode').onclick=()=>setObjectMode('flagball');
+$('start').onclick=()=>{if(!balls.length||$('status').textContent==='AUTOPLAY COMPLETED'){setup();totalTime=+$('total').value*60}playing=true;paused=false;if(roundNo===0)roundNo=1;announceRound(roundNo);beep(440,.1)};$('pause').onclick=()=>{paused=!paused;$('pause').textContent=paused?'▶ RESUME':'Ⅱ PAUSE';$('status').textContent=paused?'BATTLE PAUSED':'BATTLE IN PROGRESS'};$('restart').onclick=()=>{playing=false;paused=false;roundNo=0;totalTime=+$('total').value*60;setup();$('pause').textContent='Ⅱ PAUSE'};$('zin').onclick=()=>zoom=Math.min(1.3,zoom+.08);$('zout').onclick=()=>zoom=Math.max(.7,zoom-.08);$('zreset').onclick=()=>zoom=1;document.querySelectorAll('.rot-speed').forEach(btn=>btn.onclick=()=>{circleSpeed=+btn.dataset.speed;document.querySelectorAll('.rot-speed').forEach(x=>{x.classList.remove('selected');x.textContent=x.dataset.speed==='0.20'?'SLOW':x.dataset.speed==='0.42'?'MEDIUM':'FAST'});btn.classList.add('selected');btn.textContent=btn.textContent.replace(' ✓','')+' ✓'});$('count').onchange=()=>{playing=false;setup()};$('total').onchange=()=>totalTime=+$('total').value*60;$('full').onclick=async()=>{try{if(document.fullscreenElement){await document.exitFullscreen();return}const target=document.documentElement;const req=target.requestFullscreen||target.webkitRequestFullscreen;if(!req){alert('This browser does not support fullscreen. Open the HTML file directly in Chrome or add it to your Home Screen.');return}await req.call(target);if(screen.orientation?.lock){screen.orientation.lock('portrait').catch(()=>{})}}catch(err){alert('Could not enable fullscreen. Open the file in Chrome (not the download preview), then tap FULLSCREEN. Some Android browsers do not hide the address bar for local HTML files.')}};document.addEventListener('fullscreenchange',()=>{$('full').textContent=document.fullscreenElement?'⛶ EXIT FULLSCREEN':'⛶ FULLSCREEN'});;$('subscribeNow').onclick=()=>saySubscribe();
+$('voicePreview').onclick=()=>{const old=$('subscribeVoiceOn').checked;$('subscribeVoiceOn').checked=true;saySubscribe();$('subscribeVoiceOn').checked=old};
+$('subscribeReset').onclick=()=>{$('subscribeInterval').value=30;$('subscribeGender').value='male';$('subscribeMessage').value='Please subscribe to the NOVAVIBE TECHLAB channel!';$('subscribeVoiceOn').checked=true;$('subscribeToastOn').checked=true};
+
+// Channel-name and custom photo-theme preferences (visual customization only).
+const CHANNEL_NAME_KEY='cfb_custom_channel_name_v1';
+const THEME_PHOTO_KEY='cfb_custom_theme_photo_v1';
+const THEME_VISIBLE_KEY='cfb_custom_theme_visible_v1';
+const THEME_OPACITY_KEY='cfb_custom_theme_opacity_v1';
+const DEFAULT_CHANNEL_NAME='NOVAVIBE TECHLAB';
+let themeImage=null,themeVisible=true,themeOpacity=.90;
+function applyChannelName(name){
+ const clean=(name||'').trim().slice(0,40)||DEFAULT_CHANNEL_NAME;
+ document.querySelectorAll('.channel-name').forEach(el=>el.textContent=clean);
+ const input=document.getElementById('customChannelName');if(input)input.value=clean;
+ try{localStorage.setItem(CHANNEL_NAME_KEY,clean)}catch(e){}
+}
+function applyPhotoTheme(data){
+ themeImage=null;
+ if(data){const img=new Image();img.onload=()=>{};img.src=data;themeImage=img;}
+}
+const channelInput=document.getElementById('customChannelName');
+const savedChannelName=(()=>{try{return localStorage.getItem(CHANNEL_NAME_KEY)}catch(e){return null}})();
+applyChannelName(savedChannelName||DEFAULT_CHANNEL_NAME);
+document.getElementById('saveChannelName').onclick=()=>applyChannelName(channelInput.value);
+document.getElementById('resetChannelName').onclick=()=>applyChannelName(DEFAULT_CHANNEL_NAME);
+const savedThemePhoto=(()=>{try{return localStorage.getItem(THEME_PHOTO_KEY)}catch(e){return null}})();
+const themeVisibleInput=document.getElementById('themeVisible');
+const themeOpacityInput=document.getElementById('themeOpacity');
+try{themeVisible=localStorage.getItem(THEME_VISIBLE_KEY)!=='false';const savedOpacity=Number(localStorage.getItem(THEME_OPACITY_KEY));if(savedOpacity>=10&&savedOpacity<=100)themeOpacity=savedOpacity/100;}catch(e){}
+themeVisibleInput.checked=themeVisible;themeOpacityInput.value=Math.round(themeOpacity*100);document.getElementById('themeOpacityValue').textContent=Math.round(themeOpacity*100)+'%';
+if(savedThemePhoto)applyPhotoTheme(savedThemePhoto);
+themeVisibleInput.addEventListener('change',()=>{themeVisible=themeVisibleInput.checked;try{localStorage.setItem(THEME_VISIBLE_KEY,String(themeVisible))}catch(e){}});
+themeOpacityInput.addEventListener('input',()=>{themeOpacity=Number(themeOpacityInput.value)/100;document.getElementById('themeOpacityValue').textContent=themeOpacityInput.value+'%';try{localStorage.setItem(THEME_OPACITY_KEY,themeOpacityInput.value)}catch(e){}});
+document.getElementById('themePhotoInput').addEventListener('change',event=>{
+ const file=event.target.files&&event.target.files[0];if(!file)return;
+ if(!file.type.startsWith('image/')){alert('Please choose an image file.');event.target.value='';return;}
+ const reader=new FileReader();reader.onload=()=>{
+  const img=new Image();img.onload=()=>{
+   const max=1600,scale=Math.min(1,max/Math.max(img.width,img.height));
+   const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));
+   const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,canvas.width,canvas.height);
+   const compressed=canvas.toDataURL('image/jpeg',.78);
+   try{localStorage.setItem(THEME_PHOTO_KEY,compressed);applyPhotoTheme(compressed);}
+   catch(e){alert('Could not save this photo. Please choose a smaller image or clear browser storage.');}
+  };img.onerror=()=>alert('Could not load this image. Please try another photo.');img.src=reader.result;
+ };reader.onerror=()=>alert('Could not read this photo.');reader.readAsDataURL(file);
+});
+document.getElementById('resetThemePhoto').onclick=()=>{
+ try{localStorage.removeItem(THEME_PHOTO_KEY)}catch(e){}
+ applyPhotoTheme(null);document.getElementById('themePhotoInput').value='';
+};
+
+setup();$('flagsMode').classList.add('selected');$('flagsMode').textContent='🏳️ FLAGS ✓';requestAnimationFrame(frame);
+
+</script>
+<style>
+#cfbLicenseGate{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(3,8,22,.98);font-family:Arial,sans-serif}
+#cfbLicenseGate .gate-card{width:min(430px,100%);padding:24px;border:1px solid #397bd1;border-radius:18px;background:linear-gradient(145deg,#14264a,#071225);box-shadow:0 0 35px #1263d455;text-align:center;color:#fff}
+#cfbLicenseGate h2{margin:0 0 8px;color:#69bdff;font-size:23px}#cfbLicenseGate p{color:#b8cce8;font-size:13px;line-height:1.5}
+#cfbLicenseGate input{width:100%;padding:13px;border:1px solid #476b9c;border-radius:9px;background:#071225;color:#fff;font-size:14px;margin:10px 0;box-sizing:border-box;text-align:center;letter-spacing:1px}
+#cfbLicenseGate button{width:100%;padding:13px;border:1px solid #60a5fa;border-radius:9px;background:linear-gradient(135deg,#087ce6,#1742a0);color:#fff;font-weight:900}
+#cfbLicenseGate .gate-error{min-height:18px;color:#ff8b8b;font-size:12px;margin-top:10px}#cfbLicenseGate .gate-small{font-size:10px;color:#8298ba}
+</style>
+<div id="cfbLicenseGate"><div class="gate-card"><h2>🔐 ACTIVATE GAME</h2><p>Enter the license key provided by the game owner to unlock Country Flags Battle X.</p><input id="cfbLicenseKey" autocomplete="off" autocapitalize="characters" placeholder="NOVA-XXXX-XXXX-XXXX" maxlength="40"><button id="cfbActivateBtn">ACTIVATE LICENSE</button><div id="cfbLicenseError" class="gate-error"></div><p class="gate-small">One license key can be activated on one browser/device profile.</p></div></div>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/13.3.0/firebase-app.js';
+import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/13.3.0/firebase-functions.js';
+const firebaseConfig = {"apiKey":"AIzaSyBPtN21w_c_wF0QBNzPEfIZVs5onzkJHs8","authDomain":"country-flags-battle-c3c4f.firebaseapp.com","projectId":"country-flags-battle-c3c4f","storageBucket":"country-flags-battle-c3c4f.firebasestorage.app","messagingSenderId":"660922862393","appId":"1:660922862393:web:564f54afdcdea450e636e8","measurementId":"G-RZCS1GBHMG"};
+const app = initializeApp(firebaseConfig);
+const functions = getFunctions(app, 'asia-south1');
+const validateLicense = httpsCallable(functions, 'validateLicense');
+const gate = document.getElementById('cfbLicenseGate');
+const keyInput = document.getElementById('cfbLicenseKey');
+const activateBtn = document.getElementById('cfbActivateBtn');
+const errorBox = document.getElementById('cfbLicenseError');
+const DEVICE_KEY = 'cfb_device_instance_v1';
+function getDeviceId(){let id=localStorage.getItem(DEVICE_KEY);if(!id){id=(crypto.randomUUID?crypto.randomUUID():('d-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2)));localStorage.setItem(DEVICE_KEY,id)}return id;}
+function showGate(message=''){gate.style.display='flex';errorBox.textContent=message;}
+async function checkLicense(key){const result=await validateLicense({licenseKey:key,deviceId:getDeviceId()});return result.data;}
+activateBtn.addEventListener('click',async()=>{const key=keyInput.value.trim().toUpperCase();if(!key){showGate('Please enter your license key.');return;}activateBtn.disabled=true;activateBtn.textContent='CHECKING...';showGate('');try{const data=await checkLicense(key);if(!data.valid)throw new Error(data.message||'License is not valid.');sessionStorage.setItem('cfb_active_license',key);gate.style.display='none';}catch(e){showGate(e.message||'Could not verify license. Check your internet connection.');}finally{activateBtn.disabled=false;activateBtn.textContent='ACTIVATE LICENSE';}});
+keyInput.addEventListener('keydown',e=>{if(e.key==='Enter')activateBtn.click();});
+(async()=>{const saved=sessionStorage.getItem('cfb_active_license');if(saved){try{const data=await checkLicense(saved);if(data.valid){gate.style.display='none';return;}}catch(e){}sessionStorage.removeItem('cfb_active_license');}showGate();})();
+setInterval(async()=>{const saved=sessionStorage.getItem('cfb_active_license');if(!saved)return;try{const data=await checkLicense(saved);if(!data.valid){sessionStorage.removeItem('cfb_active_license');showGate(data.message||'License expired or revoked.');}}catch(e){sessionStorage.removeItem('cfb_active_license');showGate('Internet connection required. Please reconnect and activate your key again.');}},5*60*1000);
+</script>
+
+</body></html>
